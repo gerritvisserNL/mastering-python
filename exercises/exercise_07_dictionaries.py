@@ -20,3 +20,21 @@ if "age" not in person:
 
 if person.get("age") is None:
     print("Age not found")
+
+"""
+methods on dict
+
+person.keys() --> returns all keys
+person.values() --> returns all values
+person.items() --> returns keys and values
+person.get("key") --> gets a value safely
+person.update({}) --> updates a dict
+person.pop("key") --> removes a key and returns the value
+person.popitem() --> removes last added item
+person.clear() --> clears the dict
+person.copy() --> makes a copy
+
+important:
+if "age" in person:
+   print("age exists")
+"""
