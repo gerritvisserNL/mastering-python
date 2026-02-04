@@ -2,25 +2,57 @@ address_lines = ["Smallepad 30E", "1000 AA Amsterdam"]
 
 
 def validate_address(address_lines) -> bool:
-    address_line1 = address_lines[0].strip()
-    address_line2 = address_lines[1].strip()
-
-    # asterix (*) => put last word of address_line1 in housenumber
-    *street_parts, housenumber = address_line1.split(" ")
-
-    has_digit = any(char.isdigit() for char in housenumber)
-    if not has_digit:
-        print("Housenumber is invalid")
+    # basic check
+    if not isinstance(address_lines, (list, tuple)):
         return False
 
-    streetname = " ".join(street_parts)
-    print("streetname: ", streetname)
-    print("housenumber: ", housenumber)
+    if len(address_lines) != 2:
+        return False
 
-    print("Address_line: ", address_line2)
+    line1 = address_lines[0].strip()
+    line2 = address_lines[1].strip()
 
-    # 3. Validate second line (postcode + city)
-    return False  # tijdelijk, totdat alles werkt
+    if not line1 or not line2:
+        return False
+
+    # validate first line (street + house number)
+    parts = line1.split()
+    if len(parts) < 2:
+        return False
+
+    house_number = parts[-1]
+    if not any(char.isdigit() for char in house_number):
+        return False
+
+    street_name = " ".join(parts[:-1])
+
+    if not street_name:
+        return False
+
+    # Validate second line (postcode + city)
+    parts = line2.split()
+    if len(parts) < 3:
+        return False
+
+    pc4 = parts[0]
+    letters = parts[1].strip().upper()
+    city = " ".join(parts[2:]).strip().upper()
+
+    if not (len(pc4) == 4 and pc4.isdigit()):
+        return False
+
+    if not (len(letters) == 2 and letters.isalpha()):
+        return False
+
+    if not city:
+        return False
+
+    return True
 
 
-validate_address(address_lines)
+# Testcases
+print(validate_address(["Smallepad 30E", "1000 AA AMSTERDAM"]))  # verwacht: True
+
+print(validate_address(["Smallepad", "1000 AA AMSTERDAM"]))  # verwacht: False
+
+print(validate_address(["Smallepad 30", "Amsterdam"]))  # verwacht: False
